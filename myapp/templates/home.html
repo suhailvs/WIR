@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="post" action="."> {% csrf_token %}
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Record Transaction</h5>
+      {{ transaction_form }}<br>
+      <button type="submit" class="btn btn-primary">Pay</button>
+    </div>
+  </div>
+</form>
+<hr/>
+
+{% endblock %}
+
+{% block js %}
+<script>
+  $("#id_receiver").on("input", function(){
+    let username = $(this).val();
+    if(username.length === 10){
+      $.post('/ajax/', { username }, function(data, status) {
+        $('label[for="id_receiver"]').html(`Send money to ${data}:`);
+      });
+    }
+  });
+</script>
+{% endblock %}
