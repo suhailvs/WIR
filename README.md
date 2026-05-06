@@ -13,6 +13,8 @@ WIR functions as a closed-loop ledger. Every "creation" of currency is balanced 
     * Business B: $+1,000$ CHW (Asset/Credit)
 * New Liquidity: $1,000$ "new" units of currency have now entered the circulation of the network to facilitate that trade.
 
-### git push
+### load test
 
-need to run `git push -f origin main`
+```bash
+$ locust
+```
