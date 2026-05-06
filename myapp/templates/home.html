@@ -19,8 +19,13 @@
   $("#id_receiver").on("input", function(){
     let username = $(this).val();
     if(username.length === 10){
-      $.post('/ajax/', { username }, function(data, status) {
-        $('label[for="id_receiver"]').html(`Send money to ${data}:`);
+      $.ajax({
+        url: '/ajax/',
+        method: 'POST',
+        headers: { 'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val() },
+        data: { username },
+      }).done(function(data) {
+        $('label[for="id_receiver"]').text(`Send money to ${data.first_name}:`);
       });
     }
   });

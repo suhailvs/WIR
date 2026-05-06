@@ -18,3 +18,20 @@ WIR functions as a closed-loop ledger. Every "creation" of currency is balanced 
 ```bash
 $ locust
 ```
+
+### configuration
+
+For local development:
+
+```bash
+export DJANGO_DEBUG=true
+python manage.py runserver
+```
+
+For deployment, set a real secret key and the public hosts explicitly:
+
+```bash
+export DJANGO_SECRET_KEY='replace-with-a-long-random-secret'
+export DJANGO_ALLOWED_HOSTS='example.com,www.example.com'
+python manage.py check --deploy
+```
