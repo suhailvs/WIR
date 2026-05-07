@@ -11,9 +11,16 @@
   <body>    
     <div class="container my-4">
       <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8 col-sm-12">
+        <div class="col-lg-3 col-md-4 col-sm-8 col-12">
           <a href="{% url 'home' %}">home</a> | <a href="{% url 'transactions' %}">txn</a>
-          <h3 class="text-muted">Hi {{request.user.first_name}}. Your balance: {{request.user.balance}}$</h3>
+          <h3 class="text-muted">Hi {{request.user.first_name}}.</h3>
+          <p class="lead">Your balance: {{request.user.balance}}$</p>
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
           {% block content %}
           {% endblock %}
         </div>

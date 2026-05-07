@@ -6,7 +6,9 @@
     <div class="card-body">
       <h5 class="card-title">Record Transaction</h5>
       {{ transaction_form }}<br>
-      <button type="submit" id="payBtn" class="btn btn-primary" disabled>Pay</button>
+      <div class="d-grid gap-2 col-6 mx-auto">
+        <button type="submit" id="payBtn" class="btn btn-primary" disabled>Pay</button>
+      </div>
     </div>
   </div>
 </form>
@@ -25,14 +27,15 @@
         headers: { 'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val() },
         data: { username },
       }).done(function(data) {
-        $('label[for="id_receiver"]').text(`Send money to ${data.first_name}:`);
+        $('label[for="id_receiver"]').html(`Send money to ${data.first_name}:`);
         $('#payBtn').prop('disabled', false);
       })
       .fail(function (xhr) {
-        $('label[for="id_receiver"]').text(`Send money to "Error: ${xhr.responseJSON.error}"`);
+        $('label[for="id_receiver"]').html(`Send money to <br>"Error: ${xhr.responseJSON.error}"`);
         $('#payBtn').prop('disabled', true);
       });
     } else {
+      $('label[for="id_receiver"]').html(`Send money to:`);
       $('#payBtn').prop('disabled', true);
     }
   });
