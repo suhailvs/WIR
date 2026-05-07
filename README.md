@@ -24,14 +24,7 @@ $ locust
 For local development:
 
 ```bash
-export DJANGO_DEBUG=true
+cp .env.example .env
+bash run.sh
 python manage.py runserver
-```
-
-For deployment, set a real secret key and the public hosts explicitly:
-
-```bash
-export DJANGO_SECRET_KEY='replace-with-a-long-random-secret'
-export DJANGO_ALLOWED_HOSTS='example.com,www.example.com'
-python manage.py check --deploy
 ```

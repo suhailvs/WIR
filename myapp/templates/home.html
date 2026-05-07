@@ -6,7 +6,7 @@
     <div class="card-body">
       <h5 class="card-title">Record Transaction</h5>
       {{ transaction_form }}<br>
-      <button type="submit" class="btn btn-primary">Pay</button>
+      <button type="submit" id="payBtn" class="btn btn-primary" disabled>Pay</button>
     </div>
   </div>
 </form>
@@ -26,7 +26,14 @@
         data: { username },
       }).done(function(data) {
         $('label[for="id_receiver"]').text(`Send money to ${data.first_name}:`);
+        $('#payBtn').prop('disabled', false);
+      })
+      .fail(function (xhr) {
+        $('label[for="id_receiver"]').text(`Send money to "Error: ${xhr.responseJSON.error}"`);
+        $('#payBtn').prop('disabled', true);
       });
+    } else {
+      $('#payBtn').prop('disabled', true);
     }
   });
 </script>

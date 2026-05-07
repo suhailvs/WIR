@@ -1,9 +1,11 @@
 from pathlib import Path
+from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'django-insecure-@e@g5@bj134%k^mlyzd+p=!sksw^=i!j4+&9j5h)+x6_^(62eu'
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
+SECRET_KEY = config("SECRET_KEY")
+DEBUG = config("DEBUG", cast=bool)
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS", cast=lambda v: [s.strip() for s in v.split(",")]
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -51,7 +53,17 @@ DATABASES = {
         'NAME': BASE_DIR / 'mysite' / 'db.sqlite3',
     }
 }
-
+if config("DB_NAME"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": config("DB_NAME"),
+            "USER": config("DB_USER"),
+            "PASSWORD": config("DB_PASSWORD"),
+            "HOST": config("DB_HOST"),
+            "PORT": "5432",
+        }
+    }
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
