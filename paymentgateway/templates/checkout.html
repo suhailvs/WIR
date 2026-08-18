@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}Checkout | Stack Coin{% endblock %}
+
+{% block content %}
+<div class="card border-0 shadow-sm">
+  <div class="card-body p-4">
+    {% if final %}
+      {% if intent.status == "succeeded" %}
+        <h2 class="h5 mb-3 text-success">Payment complete</h2>
+        <p class="text-secondary mb-1">Paid <strong>${{ intent.amount }}</strong> to {{ intent.merchant.name }}</p>
+        {% if intent.order_reference %}<p class="text-secondary small">Order: {{ intent.order_reference }}</p>{% endif %}
+      {% elif intent.status == "expired" %}
+        <h2 class="h5 mb-3 text-danger">This payment link has expired</h2>
+        <p class="text-secondary">Please ask {{ intent.merchant.name }} for a new checkout link.</p>
+      {% else %}
+        <h2 class="h5 mb-3">This payment is no longer available</h2>
+      {% endif %}
+    {% else %}
+      <h2 class="h5 mb-1">Pay {{ intent.merchant.name }}</h2>
+      {% if intent.order_reference %}<p class="text-secondary small mb-3">Order: {{ intent.order_reference }}</p>{% endif %}
+      <p class="display-6 mb-4">${{ intent.amount }}</p>
+
+      {% bootstrap_messages %}
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">Pay ${{ intent.amount }}</button>
+        </div>
+      </form>
+      <p class="text-secondary small mt-3 mb-0">Signed in as {{ request.user.first_name }}. This charge will be deducted from your Stack Coin balance.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
