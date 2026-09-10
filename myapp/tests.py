@@ -25,7 +25,7 @@ class TransactionTest(TestCase):
 
     def test_login_and_make_transaction(self):
         response = self.client.get(self.url, follow=True)
-        self.assertInHTML("<title>Login | Stack Coin</title>", response.content.decode())
+        self.assertInHTML("<title>Login | WIR</title>", response.content.decode())
         self.assertContains(response, "Login to WIR")
 
         # login as suhail and pay 10$ to nusra
@@ -47,6 +47,7 @@ class TransactionTest(TestCase):
         self.assertContains(response, "$10")
         response = self.client.get(reverse("transactions"))
         self.assertContains(response, "Paid to Nusra")
+        self.assertContains(response, "Transaction #1")
 
         # prevent transaction to own account
         response = self.client.post(
@@ -75,14 +76,15 @@ class TransactionTest(TestCase):
             {
                 "first_name": "Amina",
                 "username": "9876543210",
-                "password1": "Safe-password-123",
-                "password2": "Safe-password-123",
+                "credit_limit": 500,
+                "password": "Safe-password-123",
             },
             follow=True,
         )
 
         user = User.objects.get(username="9876543210")
         self.assertEqual(user.first_name, "Amina")
+        self.assertEqual(user.credit_limit, 500)
         self.assertTrue(user.check_password("Safe-password-123"))
         self.assertEqual(response.wsgi_request.user, admin)
         self.assertContains(response, "Account for Amina has been created.")
@@ -96,13 +98,21 @@ class TransactionTest(TestCase):
             {
                 "first_name": "Amina",
                 "username": "not-a-number",
-                "password1": "Safe-password-123",
-                "password2": "Safe-password-123",
+                "credit_limit": 500,
+                "password": "Safe-password-123",
             },
         )
 
         self.assertContains(response, "Enter a 10-digit mobile number.")
         self.assertFalse(User.objects.filter(first_name="Amina").exists())
+
+    def test_signup_form_does_not_include_password_confirmation(self):
+        self.client.force_login(User.objects.get(username="7356775981"))
+
+        response = self.client.get(reverse("signup"))
+
+        self.assertContains(response, 'name="credit_limit"')
+        self.assertNotContains(response, 'name="password2"')
 
     def test_signup_is_forbidden_for_regular_users(self):
         self.client.force_login(User.objects.get(username="8921513696"))
@@ -110,6 +120,13 @@ class TransactionTest(TestCase):
         response = self.client.get(reverse("signup"))
 
         self.assertEqual(response.status_code, 403)
+
+    def test_signup_link_is_visible_to_superadmin(self):
+        self.client.force_login(User.objects.get(username="7356775981"))
+
+        response = self.client.get(self.url)
+
+        self.assertContains(response, reverse("signup"))
 
     def test_unknown_receiver_is_rejected_without_creating_transaction(self):
         self.login('7356775981')
@@ -159,4 +176,4 @@ class TransactionTest(TestCase):
 
         self.assertRedirects(response, "/login/")
         response = self.client.get(self.url, follow=True)
-        self.assertInHTML("<title>Login | Stack Coin</title>", response.content.decode())
+        self.assertInHTML("<title>Login | WIR</title>", response.content.decode())

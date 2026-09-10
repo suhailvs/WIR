@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
 
-{% block title %}Checkout | Stack Coin{% endblock %}
+{% block title %}Checkout | WIR{% endblock %}
 
 {% block content %}
 <div class="card border-0 shadow-sm">
@@ -30,7 +30,7 @@
           <button type="submit" class="btn btn-primary">Pay ${{ intent.amount }}</button>
         </div>
       </form>
-      <p class="text-secondary small mt-3 mb-0">Signed in as {{ request.user.first_name }}. This charge will be deducted from your Stack Coin balance.</p>
+      <p class="text-secondary small mt-3 mb-0">Signed in as {{ request.user.first_name }}. This charge will be deducted from your WIR balance.</p>
     {% endif %}
   </div>
 </div>

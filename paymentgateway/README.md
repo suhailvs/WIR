@@ -1,7 +1,7 @@
 # Minimal payment gateway — wiring instructions
 
 This adds a Stripe-style "Payment Intent" flow on top of your existing
-Stack Coin app. Nothing in your existing `models.py` / `views.py` is
+WIR app. Nothing in your existing `models.py` / `views.py` is
 changed — these are additions.
 
 ## 1. Files to merge
@@ -45,7 +45,7 @@ curl -X POST http://localhost:8000/pg/api/v1/payment_intents/ \
   -d '{"amount": 250, "order_reference": "ORD-8842", "redirect_url": "https://acme.example/thanks"}'
 ```
 
-Response includes `checkout_url` — redirect the customer there. They log into their Stack Coin account and approve; on success the merchant gets a webhook, and (if `redirect_url` was set) the customer is redirected back with `?intent_id=...&status=succeeded`.
+Response includes `checkout_url` — redirect the customer there. They log into their WIR account and approve; on success the merchant gets a webhook, and (if `redirect_url` was set) the customer is redirected back with `?intent_id=...&status=succeeded`.
 
 **Always trust the webhook over the redirect** — the redirect can be skipped if the customer closes the tab.
 

@@ -3,7 +3,7 @@ from django.db import models
 
 class User(AbstractUser):
     balance = models.IntegerField(default=0)
-    credit_limit = models.IntegerField(default=0)
+    credit_limit = models.PositiveIntegerField(default=0)
     
     def can_spend(self, amount):
         return (self.balance - amount) >= -self.credit_limit    
@@ -22,4 +22,3 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.sender} -> {self.receiver} ({self.amount})"
-

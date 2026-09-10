@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Stack Coin{% endblock %}</title>
+    <title>{% block title %}WIR{% endblock %}</title>
     {% bootstrap_css %}
     <style>
       body {
@@ -52,12 +52,13 @@
                 </span>
                 <span class="text-secondary small d-none d-sm-inline">{{ request.user.first_name }}</span>
               </div>
+              {% if request.user.is_superuser %}
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'signup' %}">Create user</a>
+              {% endif %}
               <form method="post" action="{% url 'logout' %}" class="mb-0">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-outline-secondary">Logout</button>
               </form>
-            {% elif request.user.is_superuser %}
-              <a class="btn btn-sm btn-outline-primary" href="{% url 'signup' %}">Create user</a>
             {% else %}
               <a class="btn btn-sm btn-primary" href="{% url 'login' %}">Login</a>
             {% endif %}

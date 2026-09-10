@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Transactions | Stack Coin{% endblock %}
+{% block title %}Transactions | WIR{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-center justify-content-between mb-3">
@@ -16,11 +16,14 @@
       <div class="d-flex justify-content-between gap-3">
         <div class="min-w-0">
           <p class="fw-semibold mb-1">
+            Txn: #{{ txn.id }}
+            <small>
             {% if txn.receiver == request.user %}
               Received from {{ txn.sender.first_name }}
             {% else %}
               Paid to {{ txn.receiver.first_name }}
             {% endif %}
+            </small>
           </p>
           {% if txn.description %}
             <p class="mb-1 text-break small">{{ txn.description }}</p>
