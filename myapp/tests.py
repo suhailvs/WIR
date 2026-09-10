@@ -65,6 +65,52 @@ class TransactionTest(TestCase):
         response = self.client.get(reverse("transactions"))
         self.assertContains(response, "Received from Suhail")
 
+    def test_superadmin_can_create_a_user(self):
+        admin = User.objects.create_superuser(
+            username="9999999999", password="Admin-password-123"
+        )
+        self.client.force_login(admin)
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "first_name": "Amina",
+                "username": "9876543210",
+                "password1": "Safe-password-123",
+                "password2": "Safe-password-123",
+            },
+            follow=True,
+        )
+
+        user = User.objects.get(username="9876543210")
+        self.assertEqual(user.first_name, "Amina")
+        self.assertTrue(user.check_password("Safe-password-123"))
+        self.assertEqual(response.wsgi_request.user, admin)
+        self.assertContains(response, "Account for Amina has been created.")
+
+    def test_signup_rejects_an_invalid_mobile_number(self):
+        self.client.force_login(User.objects.create_superuser(
+            username="9999999999", password="Admin-password-123"
+        ))
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "first_name": "Amina",
+                "username": "not-a-number",
+                "password1": "Safe-password-123",
+                "password2": "Safe-password-123",
+            },
+        )
+
+        self.assertContains(response, "Enter a 10-digit mobile number.")
+        self.assertFalse(User.objects.filter(first_name="Amina").exists())
+
+    def test_signup_is_forbidden_for_regular_users(self):
+        self.client.force_login(User.objects.get(username="8921513696"))
+
+        response = self.client.get(reverse("signup"))
+
+        self.assertEqual(response.status_code, 403)
+
     def test_unknown_receiver_is_rejected_without_creating_transaction(self):
         self.login('7356775981')
 

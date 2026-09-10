@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}Create user | WIR{% endblock %}
+
+{% block content %}
+<form method="post" class="card border-0 shadow-sm">
+  {% csrf_token %}
+  <div class="card-body p-4">
+    <div class="mb-4">
+      <h1 class="h4 mb-1">Create a WIR user</h1>
+      <p class="text-secondary mb-0">Create an account for a new member.</p>
+    </div>
+
+    {% bootstrap_form form %}
+
+    <div class="d-grid mt-4">
+      {% bootstrap_button button_type="submit" content="Create user" button_class="btn-primary" %}
+    </div>
+  </div>
+</form>
+{% endblock %}

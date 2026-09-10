@@ -45,10 +45,19 @@
           </a>
           <div class="navbar-nav flex-row align-items-center gap-2">
             {% if request.user.is_authenticated %}
+              <div class="d-flex align-items-center gap-2">
+                <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fw-semibold"
+                      style="width: 2rem; height: 2rem; font-size: .875rem;">
+                  {{ request.user.first_name|first|upper }}
+                </span>
+                <span class="text-secondary small d-none d-sm-inline">{{ request.user.first_name }}</span>
+              </div>
               <form method="post" action="{% url 'logout' %}" class="mb-0">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-sm btn-outline-secondary">Logout</button>
               </form>
+            {% elif request.user.is_superuser %}
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'signup' %}">Create user</a>
             {% else %}
               <a class="btn btn-sm btn-primary" href="{% url 'login' %}">Login</a>
             {% endif %}

@@ -8,6 +8,7 @@ urlpatterns = [
     path('transactions/',views.transactions, name='transactions'),
     path('ajax/',views.ajax, name='ajax'),
     path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('signup/', views.signup, name='signup'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('admin/', admin.site.urls),
     path("pg/", include("paymentgateway.urls")),

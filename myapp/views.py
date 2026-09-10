@@ -5,16 +5,33 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.http import JsonResponse
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_POST
 from django.core.cache import cache
 
 from .models import Transaction
-from .forms import TransactionForm
+from .forms import SignUpForm, TransactionForm
 User = get_user_model()
 LIMIT = 30 # number of requests
 WINDOW = 60 # total seconds
+
+
+@login_required
+def signup(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, f"Account for {user.first_name} has been created.")
+            return redirect("signup")
+    else:
+        form = SignUpForm()
+    return render(request, "registration/signup.html", {"form": form})
 
 def rate_limit(limit, window, prefix): # limit = number of requests, window = total seconds
     def decorator(view_func):
